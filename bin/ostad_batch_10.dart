@@ -8,12 +8,6 @@ abstract class Vehicle {
   }
 }
 
-class Car extends Vehicle {
-  @override
-  void move() {
-    print("The car is moving at a speed of $_speed km/h.");
-  }
-}
 
 void main() {
   Car myCar = Car();
