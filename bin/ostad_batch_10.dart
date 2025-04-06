@@ -3,11 +3,6 @@ abstract class Vehicle {
 
   void move();
 
-  void setSpeed(int speed) {
-    _speed = speed;
-  }
-}
-
 
 void main() {
   Car myCar = Car();
