@@ -27,7 +27,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
   void addContact() {
     if (nameController.text.isNotEmpty && numberController.text.isNotEmpty) {
       setState(() {
-        contacts.add({'name': nameController.text, 'number': numberController.text});
+        contacts.add({'Name': nameController.text, 'Number': numberController.text});
         nameController.clear();
         numberController.clear();
       });
@@ -83,8 +83,8 @@ class _ContactListScreenState extends State<ContactListScreen> {
                 itemCount: contacts.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(contacts[index]['name']!),
-                    subtitle: Text(contacts[index]['number']!),
+                    title: Text(contacts[index]['Name']!),
+                    subtitle: Text(contacts[index]['Number']!),
                     trailing: Icon(Icons.phone),
                     onLongPress: () => confirmDelete(index),
                   );
