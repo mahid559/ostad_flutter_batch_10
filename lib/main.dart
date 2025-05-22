@@ -1,97 +1,97 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ContactListScreen(),
+      home: const FlagGridPage(),
     );
   }
 }
+class Country {
+  final String name;
+  final String fact;
+  final String image;
 
-class ContactListScreen extends StatefulWidget {
-  @override
-  _ContactListScreenState createState() => _ContactListScreenState();
+  Country({required this.name, required this.fact, required this.image});
 }
 
-class _ContactListScreenState extends State<ContactListScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController numberController = TextEditingController();
-  List<Map<String, String>> contacts = [];
+final List<Country> countries = [
+  Country(name: "Bangladesh", fact: "Capital: Dhaka", image: "assets/bd.png"),
+  Country(name: "Pakistan", fact: "Capital: Islamabad", image: "assets/pk.png"),
+  Country(name: "France", fact: "Capital: Paris", image: "assets/fr.png"),
+  Country(name: "Japan", fact: "Capital: Tokyo", image: "assets/jp.png"),
+  Country(name: "Australia", fact: "Capital: Canberra", image: "assets/au.png"),
+  Country(name: "USA", fact: "Capital: Washington D.C", image: "assets/us.png"),
+];
+class FlagGridPage extends StatelessWidget {
+  const FlagGridPage({super.key});
 
-  void addContact() {
-    if (nameController.text.isNotEmpty && numberController.text.isNotEmpty) {
-      setState(() {
-        contacts.add({'name': nameController.text, 'number': numberController.text});
-        nameController.clear();
-        numberController.clear();
-      });
-    }
-  }
-
-  void confirmDelete(int index) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Confirm"),
-        content: Text("Are you sure you want to delete this contact?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("No"),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                contacts.removeAt(index);
-              });
-              Navigator.pop(context);
-            },
-            child: Text("Yes, Delete"),
-          ),
-        ],
-      ),
-    );
+  int getCrossAxisCount(double width) {
+    if (width < 768) return 2;
+    if (width < 1024) return 3;
+    return 4;
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = getCrossAxisCount(screenWidth);
+
     return Scaffold(
-      appBar: AppBar(title: Text("Contact List")),
+      appBar: AppBar(
+        title: const Text('Flag Facts Grid'),
+      ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(labelText: "Name"),
-            ),
-            TextField(
-              controller: numberController,
-              decoration: InputDecoration(labelText: "Number"),
-              keyboardType: TextInputType.phone,
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(onPressed: addContact, child: Text("Add")),
-            Expanded(
-              child: ListView.builder(
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(contacts[index]['name']!),
-                    subtitle: Text(contacts[index]['number']!),
-                    trailing: Icon(Icons.phone),
-                    onLongPress: () => confirmDelete(index),
-                  );
-                },
+        padding: const EdgeInsets.all(10),
+        child: GridView.builder(
+          itemCount: countries.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 0.75,
+          ),
+          itemBuilder: (context, index) {
+            final country = countries[index];
+            return Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-            ),
-          ],
+              child: Column(
+                children: [
+                  Image.asset(
+                    country.image,
+                    height: 80,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    country.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    country.fact,
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text("View More"),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
